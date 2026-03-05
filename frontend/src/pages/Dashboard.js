@@ -1,132 +1,148 @@
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import TrendsTab from "../components/l1/TrendsTab";
+import SkillsTab from "../components/l1/SkillsTab";
+import VulnerabilityTab from "../components/l1/VulnerabilityTab";
+import AdminPanel from "../components/l1/AdminPanel";
+
+const TABS = [
+  { id: "trends", label: "📈 Hiring Trends" },
+  { id: "skills", label: "🛠️ Skill Trends" },
+  { id: "vuln", label: "⚠️ Vulnerability" },
+  { id: "admin", label: "⚙️ Admin / Scraper" },
+];
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("trends");
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        <div style={styles.welcome}>
-          <div style={styles.avatar}>{user?.name?.charAt(0).toUpperCase()}</div>
+    <div style={d.page}>
+      <div style={d.container}>
+        {/* Header */}
+        <div style={d.header}>
           <div>
-            <h1 style={styles.title}>Welcome, {user?.name}!</h1>
-            <p style={styles.sub}>
-              {user?.email} · <span style={styles.badge}>{user?.role}</span>
+            <h1 style={d.title}>
+              SkillsMirage <span style={d.l1Tag}>L1 Dashboard</span>
+            </h1>
+            <p style={d.sub}>
+              Live Indian job market intelligence — scraping Naukri & LinkedIn
             </p>
+          </div>
+          <div style={d.userBadge}>
+            <div style={d.avatar}>{user?.name?.charAt(0).toUpperCase()}</div>
+            <div>
+              <div style={d.userName}>{user?.name}</div>
+              <div style={d.userRole}>{user?.role}</div>
+            </div>
           </div>
         </div>
 
-        <div style={styles.grid}>
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Profile Info</h3>
-            <p>
-              <span style={styles.key}>User ID:</span> {user?._id}
-            </p>
-            <p>
-              <span style={styles.key}>Name:</span> {user?.name}
-            </p>
-            <p>
-              <span style={styles.key}>Email:</span> {user?.email}
-            </p>
-            <p>
-              <span style={styles.key}>Role:</span> {user?.role}
-            </p>
-          </div>
+        {/* Tab bar */}
+        <div style={d.tabBar}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              style={{ ...d.tab, ...(activeTab === tab.id ? d.tabActive : {}) }}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Quick Start</h3>
-            <p style={styles.tip}>JWT Auth is working</p>
-            <p style={styles.tip}>Protected routes active</p>
-            <p style={styles.tip}>MongoDB connected</p>
-            <p style={styles.tip}>Add your features below!</p>
-          </div>
-
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>API Endpoints</h3>
-            <code style={styles.code}>POST /api/auth/register</code>
-            <code style={styles.code}>POST /api/auth/login</code>
-            <code style={styles.code}>GET /api/auth/me</code>
-            <code style={styles.code}>GET /api/users</code>
-          </div>
-
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Next Steps</h3>
-            <p style={styles.tip}>Add new Mongoose models</p>
-            <p style={styles.tip}>Create new API routes</p>
-            <p style={styles.tip}>Build React pages/components</p>
-            <p style={styles.tip}>Deploy to Vercel + Render</p>
-          </div>
+        {/* Tab content */}
+        <div style={d.content}>
+          {activeTab === "trends" && <TrendsTab />}
+          {activeTab === "skills" && <SkillsTab />}
+          {activeTab === "vuln" && <VulnerabilityTab />}
+          {activeTab === "admin" && <AdminPanel />}
         </div>
       </div>
     </div>
   );
 };
 
-const styles = {
+const d = {
   page: {
     minHeight: "90vh",
     background: "#0f0f1a",
     color: "#fff",
     padding: "2rem",
   },
-  container: { maxWidth: "1000px", margin: "0 auto" },
-  welcome: {
+  container: { maxWidth: "1200px", margin: "0 auto" },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: "1.5rem",
+    flexWrap: "wrap",
+    gap: "1rem",
+  },
+  title: { margin: 0, fontSize: "1.8rem", color: "#fff" },
+  l1Tag: {
+    background: "#e9456022",
+    color: "#e94560",
+    border: "1px solid #e94560",
+    borderRadius: "4px",
+    fontSize: "0.7rem",
+    padding: "0.15rem 0.5rem",
+    verticalAlign: "middle",
+    marginLeft: "0.5rem",
+    letterSpacing: "0.05em",
+  },
+  sub: { color: "#606080", margin: "0.3rem 0 0", fontSize: "0.88rem" },
+  userBadge: {
     display: "flex",
     alignItems: "center",
-    gap: "1.5rem",
-    marginBottom: "2.5rem",
-    padding: "2rem",
+    gap: "0.75rem",
     background: "#1a1a2e",
-    borderRadius: "12px",
     border: "1px solid #2a2a4a",
+    borderRadius: "8px",
+    padding: "0.6rem 1rem",
   },
   avatar: {
-    width: "64px",
-    height: "64px",
+    width: "36px",
+    height: "36px",
     borderRadius: "50%",
     background: "#e94560",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "2rem",
     fontWeight: 700,
+    fontSize: "1rem",
     flexShrink: 0,
   },
-  title: { margin: 0, fontSize: "1.8rem" },
-  sub: { color: "#a0a0b0", margin: "0.3rem 0 0" },
-  badge: {
-    background: "#e94560",
-    color: "#fff",
-    padding: "0.1rem 0.5rem",
-    borderRadius: "4px",
-    fontSize: "0.8rem",
-    fontWeight: 600,
+  userName: { color: "#fff", fontSize: "0.88rem", fontWeight: 600 },
+  userRole: { color: "#606080", fontSize: "0.75rem" },
+  tabBar: {
+    display: "flex",
+    gap: "0.25rem",
+    background: "#1a1a2e",
+    borderRadius: "10px",
+    padding: "0.3rem",
+    marginBottom: "1.5rem",
+    overflowX: "auto",
   },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "1.5rem",
+  tab: {
+    flex: 1,
+    padding: "0.55rem 1rem",
+    background: "transparent",
+    color: "#a0a0b0",
+    border: "none",
+    borderRadius: "7px",
+    cursor: "pointer",
+    fontSize: "0.88rem",
+    fontWeight: 500,
+    whiteSpace: "nowrap",
+    transition: "all 0.2s",
   },
-  card: {
+  tabActive: { background: "#e94560", color: "#fff", fontWeight: 700 },
+  content: {
     background: "#1a1a2e",
     border: "1px solid #2a2a4a",
     borderRadius: "12px",
     padding: "1.5rem",
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem",
-  },
-  cardTitle: { color: "#e94560", margin: "0 0 0.75rem", fontSize: "1rem" },
-  key: { color: "#a0a0b0", marginRight: "0.4rem", fontSize: "0.85rem" },
-  tip: { color: "#c0c0d0", margin: 0, fontSize: "0.9rem" },
-  code: {
-    display: "block",
-    background: "#0f0f1a",
-    padding: "0.4rem 0.6rem",
-    borderRadius: "4px",
-    fontFamily: "monospace",
-    fontSize: "0.8rem",
-    color: "#4ec9b0",
   },
 };
 
