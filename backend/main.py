@@ -16,7 +16,7 @@ app = FastAPI(title="SkillsMirage API", version="1.0.0")
 # In production, reads FRONTEND_URL from env (your Vercel URL).
 # In development, falls back to localhost:3000.
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://hack-mind-project.vercel.app")
 
 app.add_middleware(
     CORSMiddleware,
